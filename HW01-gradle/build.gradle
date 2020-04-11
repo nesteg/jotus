@@ -29,7 +29,7 @@ shadowJar {
 
 task run(type: JavaExec) {
     group = 'Run' // <-- change the name as per your need
-    description = 'Small description what this run will do'
+    description = 'Run main method class HelloOtus'
 
     classpath sourceSets.main.runtimeClasspath // <-- Don't change this
     main = "ru.otus.HelloOtus"

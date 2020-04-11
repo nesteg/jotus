@@ -6,6 +6,7 @@ package ru.otus;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +15,7 @@ import java.util.List;
  *
  * To start the application:
  * ./gradlew build
- * java -jar ./L01-gradle/build/libs/gradleHelloWorld-0.1.jar
- *
- * To unzip the jar:
- * unzip -l L01-gradle.jar
- * unzip -l gradleHelloWorld-0.1.jar
+ * java -jar ./HW01-gradle/build/libs/Otus-0.1.jar
  *
  * To build:
  * ./gradlew build
