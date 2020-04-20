@@ -9,8 +9,8 @@ public class DIYarrayList<E> extends AbstractList<E> implements List<E>{
    final static private Object[] empty_array = {};
    final static int MAX_ARRAY_SIZE = Integer.MAX_VALUE-8;
    public DIYarrayList(){
-       sz = 0;
-       data = new Object[default_capacity];
+      sz = 0;
+      data = new Object[default_capacity];
    }
 
 
@@ -46,8 +46,8 @@ public class DIYarrayList<E> extends AbstractList<E> implements List<E>{
 
    @Override
    public boolean add(E e) {
-      changeCapacity(sz+1);
-      data[sz++] = e;
+      changeCapacity(++sz);
+      data[sz] = e;
       return true;
    }
 
@@ -89,16 +89,14 @@ public class DIYarrayList<E> extends AbstractList<E> implements List<E>{
    @Override
    @SuppressWarnings("unchecked")
    public E get(int index) {
-       if (index > sz-1) throw new IndexOutOfBoundsException(
-               String.format("Index %d out of bounds for length %d.", index, sz));
+       checkbound(index);
        return (E)data[index];
 
    }
 
    @Override
    public E set(int index, E element) {
-      if (index > sz-1) throw new IndexOutOfBoundsException(
-              String.format("Index %d out of bounds for length %d.", index, sz));
+      checkbound(index);
       data[index]=element;
       return element;
    }
@@ -196,7 +194,7 @@ public class DIYarrayList<E> extends AbstractList<E> implements List<E>{
    }
 
    private void changeExplicitCapacity(int mincap) {
-        modCount++;
+      modCount++;
       if (mincap - data.length > 0)
          grow(mincap);
    }
@@ -204,10 +202,12 @@ public class DIYarrayList<E> extends AbstractList<E> implements List<E>{
    private void grow(int mincap) {
       int oldcap = data.length;
       int newcap = oldcap + (oldcap >> 1);
-      if (newcap - mincap < 0)
+      if (newcap - mincap < 0) {
          newcap = mincap;
-      if (newcap - MAX_ARRAY_SIZE > 0)
+      }
+      if (newcap - MAX_ARRAY_SIZE > 0) {
          newcap = hugeCapacity(mincap);
+      }
       data = Arrays.copyOf(data, newcap);
    }
 
@@ -217,6 +217,11 @@ public class DIYarrayList<E> extends AbstractList<E> implements List<E>{
       return (mincap > MAX_ARRAY_SIZE) ?
                           Integer.MAX_VALUE :
                           MAX_ARRAY_SIZE;
+   }
+
+   private void checkbound(int index) {
+      if (index > sz - 1) throw new IndexOutOfBoundsException(
+              String.format("Index %d out of bounds for length %d.", index, sz));
    }
 }
 

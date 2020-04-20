@@ -18,22 +18,22 @@ import java.util.List;
  */
 public class CollectionsOtus {
     public static void main(String... args) {
-         int count = 31;
-         Integer[] arr = new Integer[count];
-         Arrays.fill(arr,0);
-         DIYarrayList<Integer> list = new DIYarrayList<>();
-         DIYarrayList<Integer> dist = new DIYarrayList<>();
-         Collections.addAll(dist,arr);
-         for (int k=0;k < arr.length;k++){
-             arr[k]=k+10;
-         }
-         List<Integer> a = Arrays.asList(arr);
-         Collections.reverse(a);
-         Integer[]  b = new Integer[count];
-         Collections.addAll(list,a.toArray(b));
-         Collections.copy(dist,list);
-         Collections.sort(dist,Comparator.comparing(Integer.class::cast));
-          System.out.println("Welcome HomeWork02!!");
+        int count = 31;
+        Integer[] arr = new Integer[count];
+        Arrays.fill(arr,0);
+        DIYarrayList<Integer> list = new DIYarrayList<>();
+        DIYarrayList<Integer> dist = new DIYarrayList<>();
+        Collections.addAll(dist,arr);
+        for (int k=0;k < arr.length;k++){
+            arr[k]=k+10;
+        }
+        List<Integer> a = Arrays.asList(arr);
+        Collections.reverse(a);
+        Integer[]  b = new Integer[count];
+        Collections.addAll(list,a.toArray(b));
+        Collections.copy(dist,list);
+        Collections.sort(dist,Comparator.comparing(Integer.class::cast));
+        System.out.println("Welcome HomeWork02!!");
 
 
     }
