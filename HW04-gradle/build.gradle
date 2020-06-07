@@ -1,0 +1,29 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+    id 'com.github.johnrengelman.shadow'
+}
+
+sourceCompatibility = JavaVersion.VERSION_13
+targetCompatibility = JavaVersion.VERSION_13
+
+
+shadowJar {
+    archiveBaseName.set('Otus')
+    archiveVersion.set('0.1')
+    archiveClassifier.set('')
+    manifest {
+        attributes 'Main-Class': 'ru.otus.GcMain'
+    }
+}
+
+task run(type: JavaExec) {
+    group = 'Run' // <-- change the name as per your need
+    description = 'Run main method class Main'
+    classpath sourceSets.main.runtimeClasspath // <-- Don't change this
+    main = "ru.otus.GcMain"
+    //jvmArgs = ["-Xms1g", "-Xmx1g","-XX:+UseG1GC"/*,"-Xlog:gc*:file=gc.log"*/]
+   //args "arg1", "arg2"
+}
+
+tasks.build.dependsOn tasks.shadowJar
