@@ -23,7 +23,7 @@ public class AtmDefault implements Atm {
         Map<Bill,Integer> group = pack
                 .stream()
                 .collect(Collectors.groupingBy(Bill::self,Collectors.collectingAndThen(Collectors.counting(), e -> e.intValue())));
-        cells.update(group, Operation.INCREASE);
+        cells.update(group, Operation.OPERATION_INCREASE);
     }
 
     @Override
