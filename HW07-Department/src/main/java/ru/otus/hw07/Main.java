@@ -1,7 +1,7 @@
 package ru.otus.hw07;
 
 import ru.otus.hw07.Bill.Bill;
-import ru.otus.hw07.Atm.AtmDefault;
+import ru.otus.hw07.Department.AtmDefault;
 import ru.otus.hw07.Container.ContainerImpl;
 import ru.otus.hw07.Department.Balance;
 import ru.otus.hw07.Department.CommandBalance;

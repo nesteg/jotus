@@ -13,5 +13,6 @@ rootProject.name = 'HomeWorks'
 //include 'HW03-gradle'
 //include 'HW04-gradle'
 //include 'HW05-gradle'
-include 'HW06-Atm'
+//include 'HW06-Atm'
+include 'HW07-Department'
 

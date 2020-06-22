@@ -5,6 +5,6 @@ import ru.otus.hw07.Cell.Cell;
 import java.util.function.BiConsumer;
 
 public class Operation {
-    public static BiConsumer<Cell, Integer> OPERATION_INCREASE = Cell::addQuantity;
-    public static BiConsumer<Cell, Integer> OPERATION_DEGREASE = Cell::decQuantity;
+    public final static BiConsumer<Cell, Integer> OPERATION_INCREASE = Cell::addQuantity;
+    public final static BiConsumer<Cell, Integer> OPERATION_DEGREASE = Cell::decQuantity;
 }

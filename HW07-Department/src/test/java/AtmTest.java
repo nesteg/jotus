@@ -1,11 +1,11 @@
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import ru.otus.hw07.Atm.AtmDefault;
 import ru.otus.hw07.Bill.Bill;
 import ru.otus.hw07.Container.ContainerImpl;
 import ru.otus.hw07.Department.Balance;
 import ru.otus.hw07.Department.CommandBalance;
 import ru.otus.hw07.Department.Department;
+import ru.otus.hw07.Department.AtmDefault;
 import ru.otus.hw07.Department.Status;
 import ru.otus.hw07.Exceptions.AtmHasNotEnoughBillException;
 
@@ -16,11 +16,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AtmTest {
-    static Balance balance;
-    static Department department;
-    static AtmDefault atmOne;
-    static AtmDefault atmTwo;
-    static AtmDefault atmThree;
+    private static Balance balance;
+    private static Department department;
+    private static AtmDefault atmOne;
+    private static AtmDefault atmTwo;
+    private static AtmDefault atmThree;
 
     @BeforeAll
     public static void initialize(){

@@ -1,5 +1,5 @@
 package ru.otus.hw07.Department;
-public interface Receiver {
-     void addBalance(int balance);
-     void attachToSubject(Listener listener);
+abstract class Receiver {
+     abstract void addBalance(int balance);
+     abstract void attachToSubject(Listener listener);
 }

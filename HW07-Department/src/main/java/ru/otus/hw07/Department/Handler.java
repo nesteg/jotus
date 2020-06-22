@@ -3,22 +3,18 @@ package ru.otus.hw07.Department;
 import java.util.Optional;
 
 public abstract class Handler {
-    private Optional<Handler> successor;
+    private Optional<Handler> successor = Optional.empty();
 
-    {
-        successor=Optional.empty();
-    }
-
-    public void handler(Requestable request){
+    public void handler(Request request){
         if(!process(request)) {
-            successor.ifPresent(successor -> successor.handler(request));
+            successor.ifPresent(h -> h.handler(request));
         }
     }
 
     public void add(Handler handler){
-        this.successor.ifPresentOrElse(successor->successor.add(handler),
-                ()->this.successor=Optional.ofNullable(handler));
+        successor.ifPresentOrElse(h->h.add(handler),
+                ()->successor=Optional.ofNullable(handler));
     }
 
-    public abstract  boolean process(Requestable request);
+    public abstract  boolean process(Request request);
 }

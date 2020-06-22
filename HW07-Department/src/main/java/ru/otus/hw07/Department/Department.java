@@ -1,10 +1,8 @@
 package ru.otus.hw07.Department;
 
-import ru.otus.hw07.Atm.AtmDefault;
-
 import java.util.Objects;
 
-public class Department implements Receiver {
+public class Department extends Receiver {
     private int balance;
     private Handler chain;
     private final Balance subject;
@@ -47,15 +45,13 @@ public class Department implements Receiver {
         }
     }
 
-
-
     @Override
-    public void addBalance(int balance) {
+    void addBalance(int balance) {
         this.balance+=balance;
     }
 
     @Override
-    public void attachToSubject(Listener listener) {
+    void attachToSubject(Listener listener) {
         if (!Objects.isNull(subject)) {
             subject.attach(listener);
         }

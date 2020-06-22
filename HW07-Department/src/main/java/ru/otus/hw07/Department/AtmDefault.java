@@ -1,11 +1,11 @@
-package ru.otus.hw07.Atm;
+package ru.otus.hw07.Department;
 
+import ru.otus.hw07.Atm.Atm;
 import ru.otus.hw07.Bill.Bill;
 import ru.otus.hw07.Container.Container;
 import ru.otus.hw07.Department.*;
 import ru.otus.hw07.Exceptions.AtmHasNotEnoughBillException;
 import ru.otus.hw07.Operation.Operation;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,7 +90,7 @@ public class AtmDefault extends Handler implements Atm, Listener {
 
 
     @Override
-    public boolean process(Requestable request) {
+    public boolean process(Request request) {
         switch ( (Request)request) {
             case BALANCE: {
                 owner.attachToSubject(this);
