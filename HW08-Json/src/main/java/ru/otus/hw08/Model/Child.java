@@ -1,4 +1,4 @@
-package ru.otus.hw08;
+package ru.otus.hw08.Model;
 
 import lombok.Value;
 
@@ -8,4 +8,6 @@ public class Child {
     private float value;
     private String description;
     private char ch;
+    final int quantity =7;
+    transient double price;
 }

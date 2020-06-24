@@ -1,4 +1,4 @@
-package ru.otus.hw08;
+package ru.otus.hw08.Model;
 
 import java.util.List;
 import lombok.Data;

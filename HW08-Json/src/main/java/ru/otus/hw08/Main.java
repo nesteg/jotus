@@ -1,7 +1,11 @@
 package ru.otus.hw08;
 
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
+
+import ru.otus.hw08.Converter.*;
+import ru.otus.hw08.Model.*;
+
 import java.util.Arrays;
 
 /**
@@ -20,7 +24,7 @@ public class Main {
 
     public static void main(String... args) throws IllegalAccessException {
         int[] numbers = {2054,6789,18765};
-        Child child = new Child(numbers,5.39E+1f,null,'A');
+        Child child = new Child(numbers,5.39E+1f,null,'A',99d);
         Root root = new Root();
         root.setId(1L);
         root.setChilds(Arrays.asList(child));
@@ -28,8 +32,10 @@ public class Main {
         root.setBalance(1.000E+3d);
         root.setZip((short)30123);
         var converter = new JsonConverter();
-        String json = converter.toJson(root);
+        String json = converter.toJson(4L);
         System.out.println(json);
+        String json0 = new Gson().toJson(4L);
+        System.out.println(json0);
 
     }
 }

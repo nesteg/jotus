@@ -1,9 +1,6 @@
-package ru.otus.hw08;
+package ru.otus.hw08.Converter;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
+import javax.json.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
@@ -13,33 +10,30 @@ import java.util.Objects;
 
 public class JsonConverter {
 
+    private boolean singleton = true;
 
     public String toJson(Object obj) throws IllegalAccessException{
         return convert(obj).toString();
     }
 
     private JsonValue convert(Object obj) throws IllegalAccessException {
-        if (Objects.isNull(obj)){
-            return  JsonValue.NULL;
-        }
-        if (obj.getClass().isArray()) {
-            return toJsonArray(obj);
-        }
-        if (Collection.class.isAssignableFrom(obj.getClass())) {
-            Collection collection = (Collection) obj;
-            return toJsonArray(collection.toArray());
+        if (singleton){
+            singleton = false;
+            return toJsonValue(obj);
         }
         var clazz = obj.getClass();
         var builder = Json.createObjectBuilder();
         for(var field:clazz.getDeclaredFields()) {
+            if (Modifier.isTransient(field.getModifiers())) {
+                continue;
+            }
             if (Modifier.isPrivate(field.getModifiers())){
                 field.setAccessible(true);
             }
             Object o = field.get(obj);
             var value = toJsonValue(o);
-            builder.add(field.getName(), value);
-            if (Modifier.isPrivate(field.getModifiers())){
-                field.setAccessible(false);
+            if (value != JsonValue.NULL) {
+                builder.add(field.getName(), value);
             }
         }
         return builder.build();
@@ -78,8 +72,8 @@ public class JsonConverter {
             Long a = (Long)o;
             return  Json.createValue(a);
         }else if (Float.class.equals(o.getClass())) {
-            Float a =(Float)o;
-            return  Json.createValue(a);
+            var str = o.toString();
+            return  Json.createValue(Double.valueOf(str));
         }else if (Double.class.equals(o.getClass())) {
             Double a = (Double)o;
             return  Json.createValue(a);
@@ -89,6 +83,8 @@ public class JsonConverter {
         }else if (Collection.class.isAssignableFrom(o.getClass())) {
             Collection collection = (Collection) o;
             return toJsonArray(collection.toArray());
+        }else if  (o.getClass().isArray()) {
+            return toJsonArray(o);
         }
         return convert(o);
     }
