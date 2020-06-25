@@ -12,11 +12,11 @@ public class JsonConverter {
 
 
     public String toJson(Object obj) throws IllegalAccessException{
-        return convert(obj,false).toString();
+        return toJsonValue(obj).toString();
     }
 
-    private JsonValue convert(Object obj,Boolean object) throws IllegalAccessException {
-        if (!object) return toJsonValue(obj);
+    private JsonValue convert(Object obj) throws IllegalAccessException {
+
         var clazz = obj.getClass();
         var builder = Json.createObjectBuilder();
         for(var field:clazz.getDeclaredFields()) {
@@ -82,7 +82,7 @@ public class JsonConverter {
         }else if  (o.getClass().isArray()) {
             return toJsonArray(o);
         }
-        return convert(o,true);
+        return convert(o);
     }
 
 
