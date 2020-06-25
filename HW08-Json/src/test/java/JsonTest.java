@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class JsonTest {
 
     @Test
-    void ChildTest() throws IllegalAccessException {
+    void childTest() throws IllegalAccessException {
         int[] numbers = {11,21,99};
         Child child = new Child(numbers,7.77E+1f,null,'A',89d);
         var gson = new Gson();
@@ -29,7 +29,7 @@ public class JsonTest {
 
 
     @Test
-    void RootTest() throws IllegalAccessException {
+    void rootTest() throws IllegalAccessException {
         int[] numbersOne = {2054,6789,18765};
         int[] numbersTwo = {11,21,99};
         Child childOne = new Child(numbersOne,7.77E+1f,"RUS",'A',78d);
@@ -65,4 +65,20 @@ public class JsonTest {
         );
     }
 
+
+    @Test
+    void singletonTest() throws IllegalAccessException {
+        int[] numbers = {11,21,99};
+        Child child = new Child(numbers,7.77E+1f,null,'A',89d);
+
+        var gson = new Gson();
+        var converter = new JsonConverter();
+
+        converter.toJson(child);
+
+        String jsonConverter = converter.toJson(numbers);
+        String jsonGson = gson.toJson(numbers);
+
+        assertEquals(jsonConverter, jsonGson);
+    }
 }
