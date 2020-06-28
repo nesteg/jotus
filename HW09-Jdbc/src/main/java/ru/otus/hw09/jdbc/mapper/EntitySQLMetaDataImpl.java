@@ -17,14 +17,25 @@ public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
     }
 
     @Override
+    public List<String> getInitSql() {
+        var list = new ArrayList<String>();
+        list.add("create table if not exists user(id long auto_increment, name varchar(50))");
+        list.add("create table if not exists account(no long auto_increment, type varchar(255),rest int)");
+        return list;
+    }
+
+    @Override
     public String getSelectAllSql() {
-       return String.format("SELECT * FROM %s ", entity.getName());
+        List<Field> fields = entity.getAllFields();
+        var names = fields.stream().map(Field::getName).collect(Collectors.joining(", "));
+        return String.format("SELECT %s FROM %s ", names,entity.getName());
     }
 
     @Override
     public String getSelectByIdSql() {
-
-        return String.format("SELECT * FROM %s WHERE %s = ?", entity.getName(),entity.getIdField().getName());
+        List<Field> fields = entity.getAllFields();
+        var names = fields.stream().map(Field::getName).collect(Collectors.joining(", "));
+        return String.format("SELECT %s FROM %s WHERE %s = ?", names,entity.getName(),entity.getIdField().getName());
     }
 
     @Override

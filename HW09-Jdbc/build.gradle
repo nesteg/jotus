@@ -31,14 +31,24 @@ test {
     useJUnitPlatform()
 }
 
-task run(type: JavaExec) {
+task DbServiceDemo(type: JavaExec) {
     group = 'Run' // <-- change the name as per your need
     description = 'Run main method class DbServiceDemo'
     classpath sourceSets.main.runtimeClasspath // <-- Don't change this
     main = "ru.otus.hw09.DbServiceDemo"
     //jvmArgs = ["-Xms1g", "-Xmx1g","-XX:+UseG1GC"/*,"-Xlog:gc*:file=gc.log"*/]
-    jvmArgs = ["-Duser.language=en"]
+    jvmArgs = ["-Dfile.encoding=UTF-8"]
    //args "arg1", "arg2"
+}
+
+task Executordemo(type: JavaExec) {
+    group = 'Run' // <-- change the name as per your need
+    description = 'Run main method classExecutorDemo'
+    classpath sourceSets.main.runtimeClasspath // <-- Don't change this
+    main = "ru.otus.hw09.jdbc.ExecutorDemo"
+    //jvmArgs = ["-Xms1g", "-Xmx1g","-XX:+UseG1GC"/*,"-Xlog:gc*:file=gc.log"*/]
+    jvmArgs = ["-Dfile.encoding=UTF-8"]
+    //args "arg1", "arg2"
 }
 
 tasks.build.dependsOn tasks.shadowJar

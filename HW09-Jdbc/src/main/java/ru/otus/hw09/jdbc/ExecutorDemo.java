@@ -17,6 +17,8 @@ import ru.otus.hw09.jdbc.mapper.EntityClassMetaDataImpl;
 import ru.otus.hw09.jdbc.mapper.Interfaces.EntitySQLMetaData;
 import ru.otus.hw09.jdbc.mapper.EntitySQLMetaDataImpl;
 
+import javax.sql.DataSource;
+
 /**
  * @author sergey
  * created on 03.02.19.
@@ -30,7 +32,7 @@ public class ExecutorDemo {
 
     try (Connection connection = DriverManager.getConnection(URL)) {
       connection.setAutoCommit(false);
-      demo.createTable(connection);
+      demo.createTables(connection);
       demo.testUser(connection);
       demo.testAccount(connection);
     }catch (SQLException e){
@@ -112,15 +114,18 @@ public class ExecutorDemo {
   }
 
 
-  private void createTable(Connection connection)  {
-    try (PreparedStatement pst = connection.prepareStatement("create table user(id long auto_increment, name varchar(50))");
-         PreparedStatement pstMore = connection.prepareStatement("create table account(no long auto_increment, type varchar(255),rest int)")
-    ){
-      pst.executeUpdate();
-      pstMore.executeUpdate();
+  private void createTables(Connection connection) throws SQLException {
+    DbExecutorImpl<User> dbExecutor = new DbExecutorImpl<>();
+    EntitySQLMetaData querys = new EntitySQLMetaDataImpl(null);
+    try{
+      for(var query :querys.getInitSql()) {
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+          pst.executeUpdate();
+        }
+      }
       logger.info("tables created");
-    }catch (SQLException e){
-      logger.error("can't tables created",e);
+    } catch (SQLException e) {
+      logger.error("can't tables created", e);
     }
   }
 

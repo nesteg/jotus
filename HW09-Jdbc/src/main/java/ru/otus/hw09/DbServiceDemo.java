@@ -44,7 +44,7 @@ public class DbServiceDemo {
     public static void main(String[] args) throws Exception {
         DataSource dataSource = new DataSourceH2();
         DbServiceDemo demo = new DbServiceDemo();
-        demo.createTable(dataSource);
+        demo.createTables(dataSource);
         demo.testUser(dataSource);
         demo.testAccount(dataSource);
     }
@@ -91,13 +91,15 @@ public class DbServiceDemo {
     }
 
 
-    private void createTable(DataSource dataSource) throws SQLException {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement pst = connection.prepareStatement("create table user(id long auto_increment, name varchar(50))");
-             PreparedStatement pstMore = connection.prepareStatement("create table account(no long auto_increment, type varchar(255),rest int)")
-        ) {
-            pst.executeUpdate();
-            pstMore.executeUpdate();
+    private void createTables(DataSource dataSource) throws SQLException {
+        DbExecutorImpl<User> dbExecutor = new DbExecutorImpl<>();
+        EntitySQLMetaData querys = new EntitySQLMetaDataImpl(null);
+        try (Connection connection = dataSource.getConnection()){
+            for(var query :querys.getInitSql()) {
+                try (PreparedStatement pst = connection.prepareStatement(query)) {
+                    pst.executeUpdate();
+                }
+            }
             logger.info("tables created");
         } catch (SQLException e) {
             logger.error("can't tables created", e);

@@ -59,9 +59,20 @@ public class DbExecutorImpl<T> implements DbExecutor<T> {
             for (int idx = 0; idx < params.size(); idx++) {
                 pst.setString(idx + 1, params.get(idx));
             }
+
             pst.executeUpdate();
         } catch (SQLException ex) {
             connection.rollback(savePoint);
+            logger.error(ex.getMessage(), ex);
+            throw ex;
+        }
+    }
+
+    @Override
+    public void execute(Connection connection, String sql) throws SQLException {
+        try (PreparedStatement pst = connection.prepareStatement(sql)) {
+            pst.executeUpdate();
+        } catch (SQLException ex) {
             logger.error(ex.getMessage(), ex);
             throw ex;
         }
