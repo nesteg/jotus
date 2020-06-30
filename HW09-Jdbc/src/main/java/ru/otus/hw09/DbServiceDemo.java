@@ -10,8 +10,6 @@ package ru.otus.hw09;
  * ./gradlew build
  */
 
-
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -91,8 +89,7 @@ public class DbServiceDemo {
     }
 
 
-    private void createTables(DataSource dataSource) throws SQLException {
-        DbExecutorImpl<User> dbExecutor = new DbExecutorImpl<>();
+    private void createTables(DataSource dataSource) {
         EntitySQLMetaData querys = new EntitySQLMetaDataImpl(null);
         try (Connection connection = dataSource.getConnection()){
             for(var query :querys.getInitSql()) {

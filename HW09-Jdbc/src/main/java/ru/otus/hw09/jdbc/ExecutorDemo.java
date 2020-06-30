@@ -41,12 +41,13 @@ public class ExecutorDemo {
   }
 
 
-  private void testUser(Connection connection)throws SQLException {
+  private void testUser(Connection connection) {
     try{
       EntityClassMetaData<User> meta = new EntityClassMetaDataImpl<>(User.class);
       EntitySQLMetaData querys = new EntitySQLMetaDataImpl(meta);
       DbExecutorImpl<User> executorUser = new DbExecutorImpl<>();
-      long userId = executorUser.executeInsert(connection,  querys.getInsertSql(), Collections.singletonList("testUserName"));
+      var query = querys.getInsertSql().replaceFirst(":params","?");
+      long userId = executorUser.executeInsert(connection, query , Collections.singletonList("testUserName"));
       logger.info("created user:{}", userId);
       connection.commit();
 
@@ -70,23 +71,26 @@ public class ExecutorDemo {
       logger.error(e.getMessage(), e);
     }catch (NullPointerException e){
       logger.error(e.getMessage(), e);
+    }catch (SQLException e){
+      logger.error(e.getMessage(), e);
     }
   }
 
 
-  private void testAccount(Connection connection) throws SQLException {
+  private void testAccount(Connection connection)  {
     try{
       EntityClassMetaData<Account> meta = new EntityClassMetaDataImpl<>(Account.class);
       EntitySQLMetaData querys = new EntitySQLMetaDataImpl(meta);
       DbExecutorImpl<Account> executor = new DbExecutorImpl<>();
       new Account(0,"",5);
       var names = meta.getFieldsWithoutId().stream().map(Field::getName).collect(Collectors.toCollection(ArrayList::new));
-      ArrayList<String> params = new ArrayList<>(2);
+      ArrayList<Object> params = new ArrayList<>(2);
       var index = names.indexOf("type");
       params.add(index,"leading");
       index = names.indexOf("rest");
       params.add(index,"5");
-      long accountNo = executor.executeInsert(connection,  querys.getInsertSql(), params);
+      var query = querys.getInsertSql().replaceFirst(":params","?,?");
+      long accountNo = executor.executeInsert(connection,  query, params);
       logger.info("created account:{}", accountNo);
       connection.commit();
 
@@ -110,11 +114,13 @@ public class ExecutorDemo {
       logger.error(e.getMessage(), e);
     }catch (NullPointerException e){
       logger.error(e.getMessage(), e);
+    }catch (SQLException e){
+      logger.error(e.getMessage(), e);
     }
   }
 
 
-  private void createTables(Connection connection) throws SQLException {
+  private void createTables(Connection connection) {
     DbExecutorImpl<User> dbExecutor = new DbExecutorImpl<>();
     EntitySQLMetaData querys = new EntitySQLMetaDataImpl(null);
     try{

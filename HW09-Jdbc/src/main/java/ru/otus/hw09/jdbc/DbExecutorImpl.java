@@ -21,12 +21,12 @@ public class DbExecutorImpl<T> implements DbExecutor<T> {
     private static final Logger logger = LoggerFactory.getLogger(DbExecutorImpl.class);
 
     @Override
-    public long executeInsert(Connection connection, String sql, List<String> params) throws SQLException {
+    public long executeInsert(Connection connection, String sql, List<Object> params) throws SQLException {
         if (params==null) throw new NullPointerException("params is null in insert");
         Savepoint savePoint = connection.setSavepoint("savePointName");
         try (PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             for (int idx = 0; idx < params.size(); idx++) {
-                pst.setString(idx + 1, params.get(idx));
+                pst.setObject(idx + 1, params.get(idx));
             }
             pst.executeUpdate();
             try (ResultSet rs = pst.getGeneratedKeys()) {
@@ -52,12 +52,12 @@ public class DbExecutorImpl<T> implements DbExecutor<T> {
     }
 
     @Override
-    public void executeUpdate(Connection connection, String sql, List<String> params) throws SQLException {
+    public void executeUpdate(Connection connection, String sql, List<Object> params) throws SQLException {
         if (params==null) throw new NullPointerException("params is null in update");
         Savepoint savePoint = connection.setSavepoint("savePointName");
         try (PreparedStatement pst = connection.prepareStatement(sql)) {
             for (int idx = 0; idx < params.size(); idx++) {
-                pst.setString(idx + 1, params.get(idx));
+                pst.setObject(idx + 1, params.get(idx));
             }
 
             pst.executeUpdate();

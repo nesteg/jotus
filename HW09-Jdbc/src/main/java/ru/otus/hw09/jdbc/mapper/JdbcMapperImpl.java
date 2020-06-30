@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,30 +48,39 @@ public class JdbcMapperImpl<T> implements JdbcMapper<T> {
         Object o = objectData;
         Connection connection;
         List<Field> fields = meta.getFieldsWithoutId();
+        StringBuilder params = new StringBuilder();
         Boolean localBeginSession=false;
         try {
-            var params = fields.stream().map(field -> {
-                if (Modifier.isPrivate(field.getModifiers())){
-                    field.setAccessible(true);
-                }
+            int idxColumns = 0;
+            for(var field:fields) {
+                field.setAccessible(true);
                 try {
-                    return field.get(o).toString();
+                    Object v = field.get(o);
+                    idxColumns++;
+                    if (idxColumns > 1){
+                        params.append(",");
+                    }
+                    if(String.class.equals(v.getClass())){
+                        params.append("'"+ v + "'");
+                    }else{
+                        params.append(v);
+                    }
                 } catch (IllegalAccessException e) {
+                    logger.error(e.getMessage());
                 }
-                return null;
-            }).collect(Collectors.toList());
-            try {
-               connection = sessionManager.getCurrentSession().getConnection();
-            }catch ( SessionManagerException e){
-               sessionManager.beginSession();
-               connection = sessionManager.getCurrentSession().getConnection();
-               localBeginSession=true;
             }
-            long id = dbExecutor.executeInsert(connection, querys.getInsertSql(), params);
+            try {
+                connection = sessionManager.getCurrentSession().getConnection();
+            }catch ( SessionManagerException e){
+                sessionManager.beginSession();
+                connection = sessionManager.getCurrentSession().getConnection();
+                localBeginSession=true;
+            }
+            var query = querys.getInsertSql().replaceFirst(":params",params.toString());
+            long id = dbExecutor.executeInsert(connection,query , Collections.EMPTY_LIST/*params*/);
             if(localBeginSession) {
                 sessionManager.commitSession();
             }
-
             Field fldId = meta.getIdField();
             if (Modifier.isPrivate(fldId.getModifiers())){
                 fldId.setAccessible(true);
@@ -80,7 +90,7 @@ public class JdbcMapperImpl<T> implements JdbcMapper<T> {
             } catch (IllegalAccessException e) {
             }
         } catch (SQLException e) {
-
+            logger.error(e.getMessage());
         }catch (NullPointerException e){
             logger.error(e.getMessage());
         }
@@ -98,7 +108,7 @@ public class JdbcMapperImpl<T> implements JdbcMapper<T> {
                 field.setAccessible(true);
             }
             try {
-                return field.get(o).toString();
+                return field.get(o);
             } catch (IllegalAccessException e) {
                 return null;
             }

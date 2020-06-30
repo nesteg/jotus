@@ -42,8 +42,8 @@ public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
     public String getInsertSql() {
         List<Field> fields = entity.getFieldsWithoutId();
         var names = fields.stream().map(Field::getName).collect(Collectors.joining(", "));
-        var values = fields.stream().map(__ -> "?").collect(Collectors.joining(", "));
-        return String.format("INSERT INTO %s(%s) VALUES(%s)", entity.getName(),names,values);
+        var params = ":params"; //fields.stream().map(__ -> "?").collect(Collectors.joining(", "));
+        return String.format("INSERT INTO %s(%s) VALUES(%s)", entity.getName(),names,params);
     }
 
     @Override
