@@ -16,5 +16,6 @@ rootProject.name = 'HomeWorks'
 //include 'HW06-Atm'
 //include 'HW07-Department'
 //include 'HW08-Json'
-include 'HW09-Jdbc'
+//include 'HW09-Jdbc'
+include 'HW10-hibernate'
 
