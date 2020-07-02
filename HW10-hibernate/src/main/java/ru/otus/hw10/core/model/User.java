@@ -19,8 +19,7 @@ public class User {
     private AddressDataSet address;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",fetch = FetchType.EAGER)
     private List<PhoneDataSet> phones;
-    @Column(name = "address_id", nullable = false, insertable = false, updatable = false)
-    private long address_id;
+
 
     public List<PhoneDataSet> getPhones() {
         return phones;
@@ -66,13 +65,6 @@ public class User {
     }
 
 
-    public long getAddressId() {
-        return address_id;
-    }
-
-    public void setAddressId(long addressId) {
-        this.address_id=addressId;
-    }
 
     @Override
     public String toString() {

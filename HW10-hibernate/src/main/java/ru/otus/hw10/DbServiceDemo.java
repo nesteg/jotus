@@ -41,14 +41,11 @@ public class DbServiceDemo {
         user.setPhones(phones);
         long id = dbServiceUser.saveUser(user);
         Optional<User> mayBeCreatedUser = dbServiceUser.getUser(id);
-        var  u = mayBeCreatedUser.get();
-        System.out.println(u.getAddress());
+        mayBeCreatedUser.ifPresent(u->System.out.println(u));
         var  updateUser = new User(1L, "А! Нет. Это же совсем не Вася");
-        updateUser.setAddress(u.getAddress());
-
+        mayBeCreatedUser.ifPresent(u-> updateUser.setAddress(u.getAddress()));
         id = dbServiceUser.saveUser(updateUser);
         Optional<User> mayBeUpdatedUser = dbServiceUser.getUser(id);
-        var  cu = mayBeUpdatedUser.get();
 
         outputUserOptional("Created user", mayBeCreatedUser);
         outputUserOptional("Updated user", mayBeUpdatedUser);

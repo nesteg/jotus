@@ -15,7 +15,7 @@ public class PhoneDataSet {
     private String number;
 
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch =FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL,fetch =FetchType.LAZY)
     @JoinColumn(name = "user_id",referencedColumnName = "user_id")
     private User user;
 
