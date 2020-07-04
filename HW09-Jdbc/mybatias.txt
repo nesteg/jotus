@@ -1,0 +1,7 @@
+ @Override
+    public String handleToken(String content) {
+      parameterMappings.add(buildParameterMapping(content));
+      return "?";
+}
+  Знак вопрос - это не типизированная вставка с кучей потенциальных проблем,
+   как для сопровождения кода, так и большая дырка по SQL Injection (скинул чуть выше).

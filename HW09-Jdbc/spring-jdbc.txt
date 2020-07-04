@@ -1,0 +1,4 @@
+String params = String.join(", ", Collections.nCopies(columnCount, "?"));
+insertStatement.append(params);
+insertStatement.append(")");
+return insertStatement.toString();
