@@ -10,13 +10,8 @@ import java.util.WeakHashMap;
  * created on 04.07.20.
  */
 public class MyCache<K, V> implements HwCache<K, V> {
-    private final Map<K,V> cache;
-    private final List<SoftReference<HwListener<K,V>>> listeners;
-
-    {
-        cache = new WeakHashMap<>();
-        listeners = new ArrayList<>();
-    }
+    private final Map<K,V> cache = new WeakHashMap<>();
+    private final List<SoftReference<HwListener<K,V>>> listeners = new ArrayList<>();
 
     @Override
     public void put(K key, V value) {
@@ -26,8 +21,7 @@ public class MyCache<K, V> implements HwCache<K, V> {
 
     @Override
     public void remove(K key) {
-        var value = cache.get(key);
-        cache.remove(key);
+        var value = cache.remove(key);
         notify(key,value,"remove");
     }
 
@@ -46,18 +40,17 @@ public class MyCache<K, V> implements HwCache<K, V> {
 
     @Override
     public void removeListener(HwListener<K, V> listener) {
-       var iterator = listeners.iterator();
-       while(iterator.hasNext()){
-           var softListener = iterator.next();
-           if (softListener == null){
-               iterator.remove();
-           }else{
-               if (softListener.get()==listener){
-                   iterator.remove();
-                   softListener.clear();
+        var iterator = listeners.iterator();
+        while(iterator.hasNext()){
+            var softListener = iterator.next();
+            if (softListener == null){
+                iterator.remove();
+            }else{
+                if (softListener.get()==listener){
+                    iterator.remove();
                 }
-           }
-       }
+            }
+        }
     }
 
     private void notify(K key, V value, String action){
@@ -67,7 +60,10 @@ public class MyCache<K, V> implements HwCache<K, V> {
             if (softListener == null){
                 iterator.remove();
             }else{
-               softListener.get().notify(key,value,action);
+                var listener = softListener.get();
+                if (listener !=null){
+                    listener.notify(key,value,action);
+                }
             }
         }
     }

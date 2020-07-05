@@ -10,8 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.hw11.core.cachehw.HWCacheDemo;
-import ru.otus.hw11.core.cachehw.HwListener;
 import ru.otus.hw11.core.cachehw.MyCache;
 import ru.otus.hw11.core.cachehw.HwCache;
 import ru.otus.hw11.core.model.AddressDataSet;
@@ -33,17 +31,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public  class HibernateCacheTest {
     private static final String HIBERNATE_CFG_XML_FILE_RESOURCE = "hibernate-test.cfg.xml";
 
-    protected static final String FIELD_ID = "id";
-    protected static final String FIELD_NAME = "name";
     protected static final String TEST_USER_NAME = "Вася";
-    protected static final String TEST_USER_NEW_NAME = "НЕ Вася";
-    protected static final String TEST_USER_NEW_NAME2 = "Совершенно точно НЕ Вася";
     private static final Logger logger = LoggerFactory.getLogger(HibernateCacheTest.class);
 
     protected SessionFactory sessionFactory;
     private DBServiceUser dbServiceUser;
     private DbServiceUserCache dbServiceUserCache;
-    HwCache<Long,User> cache;
+    HwCache<String,User> cache;
 
     @BeforeEach
     public void setUp() {
@@ -129,6 +123,4 @@ public  class HibernateCacheTest {
         Statistics stats = sessionFactory.getStatistics();
         return stats.getEntityStatistics(User.class.getName());
     }
-
-
 }

@@ -6,10 +6,10 @@ import ru.otus.hw11.core.cachehw.HwCache;
 import java.util.Optional;
 
 public class DbServiceUserCache implements DBServiceUser {
-    DBServiceUser dbServiceUser;
-    HwCache<Long,User> cache;
+    private final DBServiceUser dbServiceUser;
+    private final HwCache<String,User> cache;
 
-    public DbServiceUserCache(DBServiceUser decor, HwCache<Long,User> cache){
+    public DbServiceUserCache(DBServiceUser decor, HwCache<String,User> cache){
         this.dbServiceUser = decor;
         this.cache = cache;
     }
@@ -17,17 +17,21 @@ public class DbServiceUserCache implements DBServiceUser {
     @Override
     public long saveUser(User user) {
         long id = dbServiceUser.saveUser(user);
-        Long idCache = (long)id;
+        String idCache = String.valueOf(id);
         cache.put(idCache,user);
         return id;
     }
 
     @Override
     public Optional<User> getUser(long id) {
-        User user = cache.get(id);
-        if (user == null){
-           return dbServiceUser.getUser(id);
+        String idCache = String.valueOf(id);
+        User user = cache.get(idCache);
+        if (user != null){
+            return Optional.of(user);
         }
-        return Optional.of(user);
+        var dbUser = dbServiceUser.getUser(id);
+        dbUser.ifPresent(u -> cache.put(idCache, u));
+        return dbUser;
+
     }
 }
