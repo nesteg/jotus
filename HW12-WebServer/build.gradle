@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow'
+}
+
+sourceCompatibility = JavaVersion.VERSION_13
+targetCompatibility = JavaVersion.VERSION_13
+
+shadowJar {
+    archiveBaseName.set('Otus')
+    archiveVersion.set('0.1')
+    archiveClassifier.set('')
+    manifest {
+        attributes 'Main-Class': 'ru.otus.WebServer'
+    }
+}
+
+dependencies {
+    implementation("ch.qos.logback:logback-classic:${Versions.logbackClassic}")
+    implementation("com.google.code.gson:gson:${Versions.gson}")
+
+    implementation("org.eclipse.jetty:jetty-server:${Versions.jetty}")
+    implementation("org.eclipse.jetty:jetty-webapp:${Versions.jetty}")
+    implementation("org.eclipse.jetty:jetty-security:${Versions.jetty}")
+    implementation("org.freemarker:freemarker:${Versions.freemarker}")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${Versions.junitJupiterEengine}")
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
+    testImplementation("org.assertj:assertj-core:${Versions.assertjCore}")
+    testImplementation("org.mockito:mockito-junit-jupiter:${Versions.mockitoJunitJupiter}")
+
+    implementation("com.h2database:h2:${Versions.h2}")
+
+    implementation("org.hibernate:hibernate-core:${Versions.hibernateCore}")
+    implementation("javax.xml.bind:jaxb-api:${Versions.jaxbApi}")
+    implementation("org.glassfish.jaxb:jaxb-runtime:${Versions.glassfishJaxb}")
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+
+task WebServer(type: JavaExec) {
+    group = 'Run' // <-- change the name as per your need
+    description = 'Run main method class WebServer'
+    classpath sourceSets.main.runtimeClasspath // <-- Don't change this
+    main = "ru.otus.WebServer"
+    //jvmArgs = ["-Xms1g", "-Xmx1g","-XX:+UseG1GC"/*,"-Xlog:gc*:file=gc.log"*/]
+    jvmArgs = ["-Dfile.encoding=UTF-8"]
+    //args "arg1", "arg2"
+}
+
+tasks.build.dependsOn tasks.shadowJar
+
