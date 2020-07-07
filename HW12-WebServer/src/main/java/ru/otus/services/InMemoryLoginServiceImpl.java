@@ -2,8 +2,8 @@ package ru.otus.services;
 
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.util.security.Password;
-import ru.otus.dao.UserDao;
-import ru.otus.model.User;
+import ru.otus.core.dao.UserDao;
+import ru.otus.core.model.User;
 
 import java.util.Optional;
 
@@ -18,7 +18,7 @@ public class InMemoryLoginServiceImpl extends AbstractLoginService {
 
     @Override
     protected String[] loadRoleInfo(UserPrincipal userPrincipal) {
-        return new String[] {"user"};
+        return new String[]{"user"};
     }
 
     @Override

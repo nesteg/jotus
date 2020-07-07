@@ -14,8 +14,10 @@ import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
-import ru.otus.dao.UserDao;
+import ru.otus.core.dao.UserDao;
+import ru.otus.core.service.DBServiceUser;
 import ru.otus.helpers.FileSystemHelper;
+import ru.otus.services.DBInitialization;
 import ru.otus.services.TemplateProcessor;
 import ru.otus.servlet.AuthorizationFilter;
 import ru.otus.servlet.LoginServlet;
@@ -36,10 +38,11 @@ public class UsersWebServerWithBasicSecurity extends UsersWebServerSimple {
 
     public UsersWebServerWithBasicSecurity(int port,
                                            LoginService loginService,
-                                           UserDao userDao,
+                                           DBServiceUser serviceUser,
                                            Gson gson,
-                                           TemplateProcessor templateProcessor) {
-        super(port, userDao, gson, templateProcessor);
+                                           TemplateProcessor templateProcessor,
+                                           DBInitialization dbInitialization) {
+        super(port, serviceUser, gson, templateProcessor, dbInitialization);
         this.loginService = loginService;
     }
 

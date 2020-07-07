@@ -3,18 +3,22 @@ package ru.otus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.hibernate.SessionFactory;
-import ru.otus.dao.UserDao;
+import ru.otus.core.cachehw.MyCache;
+import ru.otus.core.dao.UserDao;
+import ru.otus.core.service.DBServiceUser;
+import ru.otus.core.service.DbServiceUserCache;
+import ru.otus.core.cachehw.HwCache;
+import ru.otus.core.service.DbServiceUserImpl;
+import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.hibernate.HibernateUtils;
 import ru.otus.hibernate.dao.UserDaoHibernate;
-import ru.otus.model.AddressDataSet;
-import ru.otus.model.PhoneDataSet;
-import ru.otus.model.User;
+import ru.otus.core.model.AddressDataSet;
+import ru.otus.core.model.PhoneDataSet;
+import ru.otus.core.model.User;
+import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 import ru.otus.server.UsersWebServer;
 import ru.otus.server.UsersWebServerWithFilterBasedSecurity;
-import ru.otus.services.TemplateProcessor;
-import ru.otus.services.TemplateProcessorImpl;
-import ru.otus.services.UserAuthService;
-import ru.otus.services.UserAuthServiceImpl;
+import ru.otus.services.*;
 
 /*
     Полезные для демо ссылки
@@ -38,13 +42,18 @@ public class WebServer {
                 AddressDataSet.class,
                 PhoneDataSet.class
         );
-        UserDao userDao = new UserDaoHibernate(sessionFactory);
+        HwCache<String,User> cache = new MyCache<>();
+        SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
+        UserDao userDao = new UserDaoHibernate(sessionManager);
+        DBServiceUser serviceUserImpl = new DbServiceUserImpl(userDao);
+        DBServiceUser serviceUser  = new DbServiceUserCache(serviceUserImpl,cache);
         Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
-        UserAuthService authService = new UserAuthServiceImpl(userDao);
+        UserAuthService authService = new UserAuthServiceImpl(serviceUser);
+        DBInitialization dbInitialization = new DBInitializationImpl(serviceUser);
 
         UsersWebServer usersWebServer = new UsersWebServerWithFilterBasedSecurity(WEB_SERVER_PORT,
-                authService, userDao, gson, templateProcessor);
+                authService, serviceUser, gson, templateProcessor,dbInitialization);
 
         usersWebServer.start();
         usersWebServer.join();

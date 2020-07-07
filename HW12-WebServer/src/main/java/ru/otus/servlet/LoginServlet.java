@@ -1,5 +1,6 @@
 package ru.otus.servlet;
 
+import ru.otus.services.DBInitialization;
 import ru.otus.services.TemplateProcessor;
 import ru.otus.services.UserAuthService;
 
@@ -25,9 +26,11 @@ public class LoginServlet extends HttpServlet {
     private final TemplateProcessor templateProcessor;
     private final UserAuthService userAuthService;
 
+
     public LoginServlet(TemplateProcessor templateProcessor, UserAuthService userAuthService) {
         this.userAuthService = userAuthService;
         this.templateProcessor = templateProcessor;
+
     }
 
     @Override

@@ -4,8 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.eclipse.jetty.http.HttpMethod;
 import org.junit.jupiter.api.*;
-import ru.otus.dao.UserDao;
-import ru.otus.model.User;
+import ru.otus.core.dao.UserDao;
+import ru.otus.core.model.User;
+import ru.otus.core.service.DBServiceUser;
+import ru.otus.services.DBInitialization;
+import ru.otus.services.DBInitializationImpl;
 import ru.otus.services.TemplateProcessor;
 import ru.otus.services.UserAuthService;
 
@@ -40,15 +43,16 @@ class UsersWebServerImplTest {
     @BeforeAll
     static void setUp() throws Exception {
         TemplateProcessor templateProcessor = mock(TemplateProcessor.class);
-        UserDao userDao = mock(UserDao.class);
+        DBServiceUser serviceUser = mock(DBServiceUser.class);
         UserAuthService userAuthService = mock(UserAuthService.class);
+        DBInitialization dbInitialization = mock(DBInitialization.class);
 
         given(userAuthService.authenticate(DEFAULT_USER_LOGIN, DEFAULT_USER_PASSWORD)).willReturn(true);
         given(userAuthService.authenticate(INCORRECT_USER_LOGIN, DEFAULT_USER_PASSWORD)).willReturn(false);
-        given(userDao.findById(DEFAULT_USER_ID)).willReturn(Optional.of(DEFAULT_USER));
+        given(serviceUser.getUser(DEFAULT_USER_ID)).willReturn(Optional.of(DEFAULT_USER));
 
         gson = new GsonBuilder().serializeNulls().create();
-        webServer = new UsersWebServerWithFilterBasedSecurity(WEB_SERVER_PORT, userAuthService, userDao, gson, templateProcessor);
+        webServer = new UsersWebServerWithFilterBasedSecurity(WEB_SERVER_PORT, userAuthService, serviceUser, gson, templateProcessor,dbInitialization);
         webServer.start();
     }
 

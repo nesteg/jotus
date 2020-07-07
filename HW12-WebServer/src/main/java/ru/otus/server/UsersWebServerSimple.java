@@ -11,8 +11,10 @@ import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
-import ru.otus.dao.UserDao;
+import ru.otus.core.dao.UserDao;
+import ru.otus.core.service.DBServiceUser;
 import ru.otus.helpers.FileSystemHelper;
+import ru.otus.services.DBInitialization;
 import ru.otus.services.TemplateProcessor;
 import ru.otus.services.UserAuthService;
 import ru.otus.servlet.*;
@@ -25,15 +27,21 @@ public class UsersWebServerSimple implements UsersWebServer {
     private static final String START_PAGE_NAME = "index.html";
     private static final String COMMON_RESOURCES_DIR = "static";
 
-    private final UserDao userDao;
+    private final DBServiceUser serviceUser;
     private final Gson gson;
     protected final TemplateProcessor templateProcessor;
+    private final DBInitialization dbInitialization;
     private final Server server;
 
-    public UsersWebServerSimple(int port, UserDao userDao, Gson gson, TemplateProcessor templateProcessor) {
-        this.userDao = userDao;
+    public UsersWebServerSimple(int port,
+                                DBServiceUser serviceUser,
+                                Gson gson,
+                                TemplateProcessor templateProcessor,
+                                DBInitialization dbInitialization) {
+        this.serviceUser = serviceUser;
         this.gson = gson;
         this.templateProcessor = templateProcessor;
+        this.dbInitialization = dbInitialization;
         server = new Server(port);
     }
 
@@ -62,14 +70,15 @@ public class UsersWebServerSimple implements UsersWebServer {
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(resourceHandler);
-        handlers.addHandler(applySecurity(servletContextHandler, "/users", "/api/user/*","/api/user/add"));
+        handlers.addHandler(applySecurity(servletContextHandler, "/users", "/api/user/*", "/api/user/add"));
 
 
         server.setHandler(handlers);
+        dbInitialization.Init();
         return server;
     }
 
-    protected Handler applySecurity(ServletContextHandler servletContextHandler, String ...paths) {
+    protected Handler applySecurity(ServletContextHandler servletContextHandler, String... paths) {
         return servletContextHandler;
     }
 
@@ -83,9 +92,9 @@ public class UsersWebServerSimple implements UsersWebServer {
 
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, userDao)), "/users");
-        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(userDao, gson)), "/api/user/*");
-        servletContextHandler.addServlet(new ServletHolder(new CreateUser(userDao, gson)), "/api/user/add");
+        servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, serviceUser)), "/users");
+        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(serviceUser, gson)), "/api/user/*");
+        servletContextHandler.addServlet(new ServletHolder(new CreateUser(serviceUser, gson)), "/api/user/add");
         return servletContextHandler;
     }
 }
