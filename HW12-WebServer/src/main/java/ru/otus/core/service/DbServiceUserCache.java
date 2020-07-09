@@ -50,7 +50,7 @@ public class DbServiceUserCache implements DBServiceUser {
 
     @Override
     public Optional<User> findByLogin(String login) {
-        Optional<User> userCache = cache.getAll().stream().filter(u -> u.getLogin() == login).findFirst();
+        Optional<User> userCache = cache.getAll().stream().filter(u -> u.getLogin().equals(login)).findFirst();
         Optional<User> user = userCache.or(() -> {
             var dbUser = dbServiceUser.findByLogin(login);
             dbUser.ifPresent(u -> cache.put(String.valueOf(u.getId()), u));

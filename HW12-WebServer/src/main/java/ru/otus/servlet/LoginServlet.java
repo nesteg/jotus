@@ -1,6 +1,5 @@
 package ru.otus.servlet;
 
-import ru.otus.services.DBInitialization;
 import ru.otus.services.TemplateProcessor;
 import ru.otus.services.UserAuthService;
 

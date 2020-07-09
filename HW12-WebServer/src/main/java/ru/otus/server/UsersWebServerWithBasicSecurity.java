@@ -4,30 +4,19 @@ import com.google.gson.Gson;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.LoginService;
-import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
-import ru.otus.core.dao.UserDao;
 import ru.otus.core.service.DBServiceUser;
-import ru.otus.helpers.FileSystemHelper;
-import ru.otus.services.DBInitialization;
 import ru.otus.services.TemplateProcessor;
-import ru.otus.servlet.AuthorizationFilter;
-import ru.otus.servlet.LoginServlet;
-import ru.otus.servlet.UsersApiServlet;
-import ru.otus.servlet.UsersServlet;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
+
 
 public class UsersWebServerWithBasicSecurity extends UsersWebServerSimple {
     private static final String ROLE_NAME_USER = "user";
@@ -40,9 +29,8 @@ public class UsersWebServerWithBasicSecurity extends UsersWebServerSimple {
                                            LoginService loginService,
                                            DBServiceUser serviceUser,
                                            Gson gson,
-                                           TemplateProcessor templateProcessor,
-                                           DBInitialization dbInitialization) {
-        super(port, serviceUser, gson, templateProcessor, dbInitialization);
+                                           TemplateProcessor templateProcessor) {
+        super(port, serviceUser, gson, templateProcessor);
         this.loginService = loginService;
     }
 

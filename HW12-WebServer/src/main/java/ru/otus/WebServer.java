@@ -9,7 +9,6 @@ import ru.otus.core.service.DBServiceUser;
 import ru.otus.core.service.DbServiceUserCache;
 import ru.otus.core.cachehw.HwCache;
 import ru.otus.core.service.DbServiceUserImpl;
-import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.hibernate.HibernateUtils;
 import ru.otus.hibernate.dao.UserDaoHibernate;
 import ru.otus.core.model.AddressDataSet;
@@ -45,15 +44,15 @@ public class WebServer {
         HwCache<String,User> cache = new MyCache<>();
         SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
         UserDao userDao = new UserDaoHibernate(sessionManager);
-        DBServiceUser serviceUserImpl = new DbServiceUserImpl(userDao);
-        DBServiceUser serviceUser  = new DbServiceUserCache(serviceUserImpl,cache);
+        DBServiceUser serviceUser = new DbServiceUserImpl(userDao);
+        DBServiceUser serviceUserWithCache  = new DbServiceUserCache(serviceUser,cache);
         Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
-        UserAuthService authService = new UserAuthServiceImpl(serviceUser);
-        DBInitialization dbInitialization = new DBInitializationImpl(serviceUser);
-
+        UserAuthService authService = new UserAuthServiceImpl(serviceUserWithCache);
+        DBInitialization dbInitialization = new DBInitializationImpl(serviceUserWithCache);
+        dbInitialization.init();
         UsersWebServer usersWebServer = new UsersWebServerWithFilterBasedSecurity(WEB_SERVER_PORT,
-                authService, serviceUser, gson, templateProcessor,dbInitialization);
+                authService, serviceUser, gson, templateProcessor);
 
         usersWebServer.start();
         usersWebServer.join();
