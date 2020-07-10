@@ -38,14 +38,9 @@ public class DbServiceUserCache implements DBServiceUser {
 
     @Override
     public List<User> findAll() {
-        List<User> users = cache.getAll();
-        if (!users.isEmpty()) {
-            return users;
-        } else {
-            users = dbServiceUser.findAll();
+        List<User> users = dbServiceUser.findAll();
             users.forEach(user -> cache.put(String.valueOf(user.getId()), user));
             return users;
-        }
     }
 
     @Override
