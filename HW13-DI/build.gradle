@@ -1,0 +1,36 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+    id 'com.github.johnrengelman.shadow'
+}
+
+sourceCompatibility = JavaVersion.VERSION_13
+targetCompatibility = JavaVersion.VERSION_13
+
+
+shadowJar {
+    archiveBaseName.set('Otus')
+    archiveVersion.set('0.1')
+    archiveClassifier.set('')
+    manifest {
+        attributes 'Main-Class': 'ru.otus.App'
+    }
+}
+
+
+dependencies {
+    implementation("org.apache.commons:commons-lang3:3.3")
+}
+
+task App(type: JavaExec) {
+    group = 'Run' // <-- change the name as per your need
+    description = 'Run main method class App'
+
+    classpath sourceSets.main.runtimeClasspath // <-- Don't change this
+    main = "ru.otus.App"
+    jvmArgs = ["-Dfile.encoding=UTF-8"]
+    standardInput = System.in
+    //args "arg1", "arg2"
+}
+
+tasks.build.dependsOn tasks.shadowJar
