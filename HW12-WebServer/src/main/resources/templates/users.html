@@ -13,7 +13,7 @@
             const password = userPasswordTextBox.value
 
 
-            fetch('api/user/add',{
+            fetch('api/user/',{
                  method:"POST",
                  body:JSON.stringify({
                      name:name,
@@ -23,10 +23,11 @@
                  })
                 .then(response => response.json())
                 .then(user => {
-                    let text ='<td>' + user.id + '</td>\n' +
-                              '<td>' + user.name + '</td>\n' +
-                              '<td>' + user.login + '</td>\n' +
-                              '<td>' + user.password + '</td>'
+                    let {id,name,login,password} = user
+                    let text ='<td>' + id + '</td>\n' +
+                              '<td>' + name + '</td>\n' +
+                              '<td>' + login + '</td>\n' +
+                              '<td>' + password + '</td>'
                     userDataContainer.innerHTML += text})
         }
     </script>

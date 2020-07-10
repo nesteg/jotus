@@ -75,10 +75,9 @@ public class UsersWebServerSimple implements UsersWebServer {
 
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        var usersApiServlet = new UsersApiServlet(serviceUser, gson);
+
         servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, serviceUser)), "/users");
-        servletContextHandler.addServlet(new ServletHolder(usersApiServlet), "/api/user/*");
-        servletContextHandler.addServlet(new ServletHolder(usersApiServlet), "/api/user/");
+        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(serviceUser, gson)), "/api/user/*");
         return servletContextHandler;
     }
 }
