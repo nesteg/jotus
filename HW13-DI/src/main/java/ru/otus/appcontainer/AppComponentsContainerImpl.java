@@ -5,10 +5,7 @@ import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
 
 import java.io.File;
-import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.net.JarURLConnection;
-import java.net.URL;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -38,9 +35,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     public AppComponentsContainerImpl(String packageName) throws Exception {
         var configClasses = getClassesFromPackage(packageName);
-        if (configClasses.size() > 1) {
-            sortConfigsByOrder(configClasses);
-        }
+        configClasses.sort(Comparator.comparing(cl -> cl.getDeclaredAnnotation(AppComponentsContainerConfig.class).order()));
         for (var initialConfigClass :configClasses) {
             processConfig(initialConfigClass);
         }
@@ -49,9 +44,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     private void processConfig(Class<?> configClass) throws Exception {
         checkConfigClass(configClass);
         var methods = configClass.getDeclaredMethods();
-        if (methods.length > 1) {
-            sortMethodsByOrder(methods);
-        }
+        Arrays.sort(methods,Comparator.comparingInt(m->m.getDeclaredAnnotation(AppComponent.class).order()));
         var constructor = configClass.getConstructor(null);
         var objConfig = constructor.newInstance();
         for (var method : methods) {
@@ -61,12 +54,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
             var parameters = method.getParameters();
             for (var parameter : parameters) {
                 var clazz = parameter.getType();
-                for (var component : appComponents) {
-                    if (clazz.isAssignableFrom(component.getClass())) {
-                        objs.add(component);
-                        break;
-                    }
-                }
+                objs.add(getAppComponent(clazz));
             }
             var obj = method.invoke(objConfig, objs.toArray());
             appComponents.add(obj);
@@ -126,36 +114,6 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
             }
         }
         return listClass;
-    }
-
-    private void sortMethodsByOrder(Method[] methods) {
-        Arrays.sort(methods, new Comparator<Method>() {
-            @Override
-            public int compare(Method m1, Method m2) {
-                var annotation1 = m1.getDeclaredAnnotation(AppComponent.class);
-                var annotation2 = m2.getDeclaredAnnotation(AppComponent.class);
-                if (annotation1.order() < annotation2.order()) {
-                    return -1;
-                } else {
-                    return (annotation1.order() == annotation2.order()) ? 0 : 1;
-                }
-            }
-        });
-    }
-
-    private void sortConfigsByOrder(List<Class<?>> configs) {
-       Collections.sort(configs, new Comparator<Class<?>>() {
-            @Override
-            public int compare(Class<?> cl1, Class<?> cl2) {
-                var annotation1 = cl1.getDeclaredAnnotation(AppComponentsContainerConfig.class);
-                var annotation2 = cl2.getDeclaredAnnotation(AppComponentsContainerConfig.class);
-                if (annotation1.order() < annotation2.order()) {
-                    return -1;
-                } else {
-                    return (annotation1.order() == annotation2.order()) ? 0 : 1;
-                }
-            }
-        });
     }
 
     private Class<?> getClazz(String resource,String packageName) throws Exception{
