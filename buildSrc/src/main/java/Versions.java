@@ -11,4 +11,10 @@ public interface Versions {
     String assertjCore = "3.16.1";
     String mockitoJunitJupiter = "3.3.3";
     String h2 = "1.4.185";
+    String springContext = "5.2.7.RELEASE";
+    String springWebMvc = "5.2.7.RELEASE";
+    String springWeb = "5.2.7.RELEASE";
+    String thymeLeaf = "3.0.9.RELEASE";
+    String thymeLeafSpring5 = "3.0.9.RELEASE";
+    String servletApi = "4.0.0";
 }
