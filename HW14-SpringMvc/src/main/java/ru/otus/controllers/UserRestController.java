@@ -1,6 +1,7 @@
 package ru.otus.controllers;
 
 import org.springframework.web.bind.annotation.*;
+import ru.otus.core.dto.UserDto;
 import ru.otus.core.model.User;
 import ru.otus.core.service.DBServiceUser;
 
@@ -20,7 +21,9 @@ public class UserRestController {
 
 
     @PostMapping("/api/user")
-    public User saveUser(@RequestBody User user) {
+    public User saveUser(@RequestBody UserDto userDto) {
+        User user = new User();
+        user.setName(userDto.getName());
          usersService.saveUser(user);
          return user;
     }

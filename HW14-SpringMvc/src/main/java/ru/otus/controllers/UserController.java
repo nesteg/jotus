@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 import ru.otus.core.model.User;
 import ru.otus.core.service.DBServiceUser;
+import ru.otus.core.dto.UserDto;
 
 import java.util.List;
 
@@ -30,12 +31,14 @@ public class UserController {
 
     @GetMapping("/user/create")
     public String userCreateView(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserDto());
         return "userCreate.html";
     }
 
     @PostMapping("/user/save")
-    public RedirectView userSave(@ModelAttribute User user) {
+    public RedirectView userSave(@ModelAttribute UserDto userDto) {
+        User user = new User();
+        user.setName(userDto.getName());
         usersService.saveUser(user);
         return new RedirectView("/", true);
     }
