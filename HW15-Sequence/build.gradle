@@ -1,0 +1,36 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+    id 'com.github.johnrengelman.shadow'
+}
+
+sourceCompatibility = JavaVersion.VERSION_13
+targetCompatibility = JavaVersion.VERSION_13
+
+
+/*compileJava {
+    options.fork = true
+    options.forkOptions.javaHome = file("C:\\Program Files\\Java\\jdk-13.0.2")
+}*/
+
+
+
+shadowJar {
+    archiveBaseName.set('Otus')
+    archiveVersion.set('0.1')
+    archiveClassifier.set('')
+    manifest {
+        attributes 'Main-Class': 'ru.otus.Sequence'
+    }
+}
+
+task run(type: JavaExec) {
+    group = 'Run' // <-- change the name as per your need
+    description = 'Run main method class HelloOtus'
+
+    classpath sourceSets.main.runtimeClasspath // <-- Don't change this
+    main = "ru.otus.Sequence"
+    //args "arg1", "arg2"
+}
+
+tasks.build.dependsOn tasks.shadowJar
