@@ -1,11 +1,8 @@
 package ru.otus.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import ru.otus.core.service.DBServiceUser;
 import ru.otus.messagesystem.HandlersStore;
 import ru.otus.messagesystem.HandlersStoreImpl;
@@ -25,7 +22,6 @@ import ru.otus.messagesystemapp.wsfront.handlers.GetUserDtoResponseHandler;
 import ru.otus.messagesystemapp.wsfront.handlers.GetUserListDtoResponseHandler;
 
 @Configuration
-
 public class MessageSystemConfig {
 
     private static final String WEBSOCKET_SERVICE_CLIENT_NAME = "websocketService";
@@ -33,7 +29,6 @@ public class MessageSystemConfig {
 
 
     @Bean("requestHandlerDaoStore")
-    @Autowired
     HandlersStore requestHandlerDaoStore( DBServiceUser dbServiceUser){
         HandlersStore requestHandlerDaoStore = new HandlersStoreImpl();
         requestHandlerDaoStore.addHandler(MessageType.USER_DATA, new GetUserDtoRequestHandler(dbServiceUser));
@@ -44,7 +39,6 @@ public class MessageSystemConfig {
 
 
     @Bean("requestHandlerWebSocket")
-    @Autowired
     HandlersStore requestHandlerWebSocket( CallbackRegistry callbackRegistry){
         HandlersStore requestHandlerWebSocket = new HandlersStoreImpl();
         requestHandlerWebSocket.addHandler(MessageType.USER_DATA, new GetUserDtoResponseHandler(callbackRegistry));
@@ -64,16 +58,21 @@ public class MessageSystemConfig {
     }
 
     @Bean
+    MsClient databaseMsClient(MessageSystem messageSystem,
+                              DBServiceUser dbServiceUser,
+                              CallbackRegistry callbackRegistry) {
+        MsClientImpl daoMsClient = new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME,
+                messageSystem, requestHandlerDaoStore(dbServiceUser), callbackRegistry);
+        messageSystem.addClient(daoMsClient);
+        return daoMsClient;
+    }
+
+    @Bean
     WsFrontService getWsService( MessageSystem messageSystem,
-                                 @Qualifier("requestHandlerDaoStore") HandlersStore requestHandlerDaoStore,
-                                 @Qualifier("requestHandlerWebSocket") HandlersStore requestHandlerWebSocket,
                                  CallbackRegistry callbackRegistry) {
 
-        MsClient databaseMsClient = new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME,
-                messageSystem, requestHandlerDaoStore, callbackRegistry);
-        messageSystem.addClient(databaseMsClient);
         MsClient frontMsClient = new MsClientImpl(WEBSOCKET_SERVICE_CLIENT_NAME,
-                messageSystem, requestHandlerWebSocket, callbackRegistry);
+                messageSystem, requestHandlerWebSocket(callbackRegistry), callbackRegistry);
         messageSystem.addClient(frontMsClient);
         return new WsFrontServiceImpl(frontMsClient, DATABASE_SERVICE_CLIENT_NAME);
     }

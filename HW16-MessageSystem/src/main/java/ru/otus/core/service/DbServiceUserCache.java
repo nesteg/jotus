@@ -1,12 +1,15 @@
 package ru.otus.core.service;
 
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
 import ru.otus.core.model.User;
 import ru.otus.core.cachehw.HwCache;
 
 import java.util.List;
 import java.util.Optional;
 
-
+@Service
+@Primary
 public class DbServiceUserCache implements DBServiceUser {
     private final DBServiceUser dbServiceUser;
     private final HwCache<String, User> cache;

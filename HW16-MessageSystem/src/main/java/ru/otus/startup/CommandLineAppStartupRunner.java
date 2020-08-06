@@ -16,7 +16,6 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
     @Override
     public void run(String...args) throws Exception {
-      DBInitialization dbinit = new DBInitializationImpl(dbServiceuser);
-      dbinit.init();
+
     }
 }

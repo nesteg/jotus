@@ -2,6 +2,7 @@ package ru.otus.core.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.dao.UserDaoException;
 import ru.otus.core.model.User;
@@ -10,6 +11,7 @@ import ru.otus.core.sessionmanager.SessionManager;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class DbServiceUserImpl implements DBServiceUser {
     private static Logger logger = LoggerFactory.getLogger(DbServiceUserImpl.class);
 
