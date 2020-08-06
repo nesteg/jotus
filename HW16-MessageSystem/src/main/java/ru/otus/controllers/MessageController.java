@@ -2,23 +2,14 @@ package ru.otus.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.util.HtmlUtils;
-import ru.otus.core.model.User;
 import ru.otus.core.service.DBServiceUser;
 import ru.otus.dto.UserDto;
 import ru.otus.dto.UserListDto;
 import ru.otus.messagesystemapp.wsfront.WsFrontService;
-
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Controller
