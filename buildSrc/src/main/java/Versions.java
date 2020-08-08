@@ -17,4 +17,8 @@ public interface Versions {
     String thymeLeaf = "3.0.9.RELEASE";
     String thymeLeafSpring5 = "3.0.9.RELEASE";
     String servletApi = "4.0.0";
+
+    String sockjs = "1.1.2";
+    String stomp = "2.3.3-1";
+    String bootstrap = "4.4.1-1";
 }
