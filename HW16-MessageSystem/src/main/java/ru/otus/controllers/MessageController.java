@@ -17,12 +17,10 @@ public class MessageController {
     private static final Logger logger = LoggerFactory.getLogger(MessageController.class);
 
     private final SimpMessagingTemplate template;
-    private final DBServiceUser dbserviceUser;
     private final WsFrontService wsFrontService;
 
-    public MessageController(SimpMessagingTemplate template, DBServiceUser dbserviceUser, WsFrontService wsFrontService) {
+    public MessageController(SimpMessagingTemplate template, WsFrontService wsFrontService) {
         this.template = template;
-        this.dbserviceUser = dbserviceUser;
         this.wsFrontService = wsFrontService;
     }
 

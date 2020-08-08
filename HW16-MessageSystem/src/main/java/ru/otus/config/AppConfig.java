@@ -35,9 +35,4 @@ public class AppConfig {
         return new DBInitializationImpl(dbServiceuser);
     }
 
-    @Bean
-    public SessionManagerHibernate userDao(SessionFactory session) {
-        return new SessionManagerHibernate(session);
-    }
-
 }
