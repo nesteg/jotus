@@ -1,0 +1,5 @@
+grpc:
+  host: localhost
+  port: 8090
+dbinit:
+  action: No

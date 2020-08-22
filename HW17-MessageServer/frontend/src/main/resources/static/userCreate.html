@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create user</title>
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/app.js"></script>
+    <script>
+      $( document ).ready(function() {
+              $("#sendSave").prop("disabled", true);
+              connect().then(()=> $("#sendSave").prop("disabled", false));
+        });
+    </script>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <h1>New User:</h1>
+
+    <div class="row">
+        <label for="userIdTextBox">Name:</label>
+        <input id="userIdTextBox" name="name" type="text"  value=""/>
+    </div>
+
+    <div class="row">
+        <button id="sendSave">Save</button>
+    </div>
+
+
+<div id = "userDataContainer">
+
+</div>
+<br/>
+<br/>
+<a href="index.html">Обратно</a>
+</body>
+</html>
