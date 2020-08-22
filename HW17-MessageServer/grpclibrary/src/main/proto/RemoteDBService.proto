@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package ru.otus.protobuf.generated;
+
+option java_multiple_files = true;
+
+message UserMessage {
+    int64 id = 1;
+    string name = 2;
+}
+
+message IdMessage {
+    int64 id = 1;
+}
+
+message Empty {}
+
+service RemoteMsService {
+    rpc saveUser(UserMessage) returns (UserMessage);
+    rpc findAllUsers(Empty) returns (stream UserMessage);
+    rpc findByIdUser(IdMessage)  returns (stream UserMessage);
+}
+
+service RemoteDBService {
+    rpc saveUser(stream UserMessage) returns (stream UserMessage);
+    rpc findAllUsers(stream UserMessage) returns (stream Empty);
+    rpc findByIdUser(stream UserMessage)  returns (stream IdMessage);
+}
